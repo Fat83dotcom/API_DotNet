@@ -14,6 +14,5 @@
             set => _name = value?.ToUpper(System.Globalization.CultureInfo.CurrentCulture);
         }
         public int? Age { get; set; }
-
     }
 }
