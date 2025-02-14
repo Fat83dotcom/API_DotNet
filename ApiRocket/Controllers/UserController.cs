@@ -58,9 +58,11 @@ namespace ApiRocket.Controllers
         }
 
         [HttpDelete]
+        [Route("delete/")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public IActionResult DeleteUser()
         {
-            return Ok();
+            return NoContent();
         }
     }
 }
