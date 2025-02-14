@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ApiRocket.Comunications.Requests;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiRocket.Controllers
@@ -7,21 +9,58 @@ namespace ApiRocket.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        [HttpGet]
-        [ProducesResponseType(typeof(Response), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Get(string? name, string? age)
+        [HttpGet] // define que o metodo seja do tipo get
+        //[Route("{name}/{age}")] // cria uma rota com variaveis
+        [ProducesResponseType(typeof(RequestGetUser), StatusCodes.Status200OK)] // Define o objeto que será retornado e o status code
+        [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        public IActionResult UpperCaseName([FromHeader]string? name)
         {
-            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(age))
+            if (string.IsNullOrEmpty(name))
             {
-                return BadRequest();
+                BadRequestResponse badResponse = new(null)
+                {
+                    Title = "BadRequest",
+                    Detail = "O nome ou a idade não podem estar vazios."
+                };
+                return BadRequest(badResponse);
             }
-            if (int.TryParse(age, out int _))
+            RequestGetUser user = new()
             {
-                Response response = new(name, int.Parse(age));
-                return Ok(response); 
+                Name = name,
+            };
+            return Ok(user);
+        }
+
+        [HttpPost]
+        [Route("create/")]
+        [ProducesResponseType(typeof(string) ,StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BadRequestResponse) ,StatusCodes.Status400BadRequest)]
+        public IActionResult CreateUser([FromBody] RequestRegisterUserJson request)
+        {
+            if (request.InvalidRegister())
+            {
+                BadRequestResponse badRequest = new(null)
+                {
+                    Title = "Bad Request",
+                    Detail = "Nenhum atributo pode ser vazio."
+                };
+                return BadRequest(badRequest);
             }
-            return BadRequest();
+            return Created();
+        }
+
+        [HttpPut]
+        [Route("update/")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult UpdateUser([FromQuery] RequestUpdateUser request)
+        {
+            return Ok(request);
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteUser()
+        {
+            return Ok();
         }
     }
 }
