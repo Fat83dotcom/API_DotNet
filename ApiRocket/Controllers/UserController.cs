@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiRocket.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UserController : ControllerBase
+{ 
+    public class UserController : ApiBaseController
     {
         [HttpGet] // define que o metodo seja do tipo get
         //[Route("{name}/{age}")] // cria uma rota com variaveis

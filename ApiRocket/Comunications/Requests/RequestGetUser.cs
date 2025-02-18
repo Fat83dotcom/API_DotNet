@@ -13,7 +13,6 @@ namespace ApiRocket.Comunications.Requests
             set => _name = value?.ToUpper(System.Globalization.CultureInfo.CurrentCulture);
         }
     }
-
     public class BadRequestResponse(object? value) : ObjectResult(value)
     {
         public string? Title { get; set; }
